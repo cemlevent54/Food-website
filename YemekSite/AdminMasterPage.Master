@@ -1,0 +1,188 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="AdminMasterPage.master.cs" Inherits="YemekSite.AdminMasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+    <style>
+        body {
+            margin-left: 400px;
+        }
+
+        .div_slider {
+            height: 150px;
+            width: 700px;
+            background-color: transparent;
+        }
+
+        .div_empty {
+            height: 30px;
+            width: 700px;
+            background-color: floralwhite;
+        }
+
+        #div_menu {
+            height: 40px;
+            width: 700px;
+            background-color: transparent;
+            display: flex;
+        }
+
+
+
+        #pctrSlider {
+            background-color: blue;
+            height: 100%;
+            width: 100%;
+            background-size: cover;
+        }
+
+        .user_buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .user_button {
+            margin-left: 10px;
+            Adjust the value to set the desired space margin-right:5px;
+        }
+
+        .category_list {
+            margin-top: 10px;
+            Adjust the value as needed
+        }
+
+        .div_empty {
+            /* Diğer stiller */
+        }
+
+
+
+        .user_photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .user_name {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .user_dropdown {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%; /* Tablonun genişliğini sabitledim */
+            margin: 0px; /* Tablonun etrafına boşluk bıraktım */
+            border-collapse: collapse;
+            justify-content: center;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            text-decoration: none;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+
+    <script>
+        function delayNavigation(event, url) {
+            event.preventDefault(); // Sayfa yenilenmesini engeller
+            console.log("Navigating to:", url); // Konsolda URL'yi yazdırarak kontrol edelim
+            setTimeout(function () {
+                window.location.href = url;
+            }, 30000); // 30000 milisaniye = 30 saniye
+        }
+
+    </script>
+
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="div_slider" style="padding-bottom: 30px; padding-top: 20px;">
+            <asp:Image ID="pctrSlider" runat="server" ImageUrl="images/background_image_1.jpg" />
+        </div>
+        <div style="margin-right:300px;align-items:center">
+            <asp:Image ID="Image1" runat="server" Width="100px" Height="100px" Style="border-radius: 50%;" />
+            <asp:Label ID="lbl_kullaniciAdi" runat="server" Text="" CssClass="user_name" Style="font-size: 20px; margin: 0 10px;"></asp:Label>
+            <asp:LinkButton ID="lnkbtn_cikisYap" runat="server" OnClick="lnkbtn_cikisYap_Click" BackColor="Black" ForeColor="White" Width="68px" Font-Size="17px" Style="padding: 5px 10px; text-decoration: none; border-radius: 5px; display: inline-block;">Çıkış Yap</asp:LinkButton>
+        </div>
+        <br />
+        <div style="width: 700px; height: 300px; background-color: none;">
+            <div style="width: 200px; height: auto; float: left; background-color: deepskyblue; margin-left: 0;">
+                MENÜLER
+                    <table>
+                        <tr>
+                            <td>
+                                <a href="Kategoriler.aspx">Kategoriler</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="YoneticiYemekler.aspx">Yemekler</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="Yorumlar.aspx">Yorumlar</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="Mesajlar.aspx">Mesajlar</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="GununYemegiSecme.aspx">Günün Yemeği</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="Tarifler.aspx">Tarifler</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="HakkimizdaDuzenle.aspx">Hakkımızda</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="KullaniciKontrol.aspx">Kullanıcılar</a>
+                            </td>
+                        </tr>
+                    </table>
+            </div>
+            <div style="width: 450px; height: auto; float: left; background-color: deepskyblue; margin-left: 50px;">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,262 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="master_page.master.cs" Inherits="YemekSite.master_page" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+    <style>
+        body {
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .div_slider {
+            height: 20vh;
+            width: 100%;
+            background-color: red;
+            margin-bottom: 20px;
+        }
+
+        .div_empty {
+            height: 30px;
+            width: 100%;
+            background-color: lightsteelblue;
+            margin-bottom: 20px;
+        }
+
+        #div_menu {
+            height: 40px;
+            width: 100%;
+            background-color: transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .menu_buttons {
+            flex: 1 1 140px;
+            background-color: indianred;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 5px;
+            height:40px;
+        }
+
+        .menu_buttons:hover {
+            background-color: antiquewhite;
+            color: black;
+            height:50px;
+            width:150px;
+        }
+
+        #pctrSlider {
+            background-color: blue;
+            height: 100%;
+            width: 100%;
+            background-size: cover;
+        }
+
+        .user_buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .user_button {
+            margin-left: 10px;
+            background: none;
+            border: none;
+            color: black;
+            cursor: pointer;
+            text-decoration: auto;
+            font-size: 20px;
+        }
+
+        .user_button:hover {
+            color: black;
+        }
+
+        .user_photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .user_name {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .user_dropdown {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: none;
+        }
+
+        .category_list {
+            margin-top: 10px;
+            background-color: #ffebcd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .category_list a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .category_list a:hover {
+            text-decoration: underline;
+        }
+
+        .main_content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .left_panel {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            margin-right: 10px;
+        }
+
+        .categories {
+            background-color: #ce7171;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .user-info {
+            background-color: #ffffff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .content_placeholder {
+            width: 70%;
+            background-color: #ce7171;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .category_item {
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            text-decoration: none !important;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .category_item:hover {
+            transform: scale(1.05);
+            background-color: #ffd700;
+            color: #000;
+            text-decoration: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .main_content {
+                flex-direction: column;
+            }
+
+            .left_panel, .content_placeholder {
+                width: 100%;
+                margin-right: 0;
+            }
+
+            .menu_buttons {
+                flex: 1 1 100px;
+                margin: 5px;
+            }
+
+            .user_button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="div_slider">
+            <asp:Image ID="pctrSlider" runat="server" ImageUrl="images/background_image_1.jpg" />
+        </div>
+
+        <div class="user_buttons div_empty">
+            <asp:LinkButton class="user_button" ID="lnkbtn_login" runat="server" OnClick="lnkbtn_login_Click">Giriş Yap</asp:LinkButton>
+            <asp:LinkButton class="user_button" ID="lnkbtn_signup" runat="server" OnClick="lnkbtn_signup_Click">Üye Ol</asp:LinkButton>
+        </div>
+
+        <div id="div_menu">
+            <asp:Button class="menu_buttons" ID="btnAnaSayfa" runat="server" Text="Ana Sayfa" OnClick="btnAnaSayfa_Click" />
+            <asp:Button class="menu_buttons" ID="btnGununYemegi" runat="server" Text="Günün Yemeği" OnClick="btnGununYemegi_Click" />
+            <asp:Button class="menu_buttons" ID="btnTarifOner" runat="server" Text="Tarif Öneri" OnClick="btnTarifOner_Click" />
+            <asp:Button class="menu_buttons" ID="btnAbout" runat="server" Text="Hakkımızda" OnClick="btnAbout_Click" />
+            <asp:Button class="menu_buttons" ID="btnCommunication" runat="server" Text="İletişim" OnClick="btnCommunication_Click" />
+        </div>
+
+        <div class="main_content">
+            <div class="left_panel">
+                <div class="categories">
+                    <h3>KATEGORİLER</h3>
+                    <asp:DataList ID="DataList1" runat="server" CellPadding="4" ForeColor="#333333" CssClass="category_list" Width="100%" Font-Bold="true">
+                        <AlternatingItemStyle BackColor="#ff6600"></AlternatingItemStyle>
+                        <FooterStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White"></FooterStyle>
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White"></HeaderStyle>
+                        <ItemStyle BackColor="White"></ItemStyle>
+                        <ItemTemplate>
+                            <a class="category_item" href='<%# "AnasayfaKategoriDetay.aspx?kategori_id=" + Eval("kategori_id") %>'>
+                                <asp:Label ID="Label1" runat="server" Text='<%# Eval("kategori_ad") + "(" + Eval("kategori_adet") + ")"%>'></asp:Label>
+                            </a>
+                        </ItemTemplate>
+                        <SelectedItemStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333"></SelectedItemStyle>
+                    </asp:DataList>
+                </div>
+
+                <div class="user-info">
+                    <!-- User information content goes here -->
+                    <asp:Panel ID="pnl_logined_user" runat="server">
+                        <asp:Image ID="Image1" runat="server" Height="100px" Width="100px"/> <br />
+                        <asp:Label ID="lbl_user_name" runat="server" Text=""></asp:Label>
+                        <asp:LinkButton ID="lnkbtn_logout" runat="server" Text="Çıkış Yap" OnClick="lnkbtn_logout_Click"></asp:LinkButton>
+                    </asp:Panel>
+                </div>
+            </div>
+
+            <div class="content_placeholder">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+        </div>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        <%--$(document).ready(function () {
+            $('#<%= lnkbtn_login.ClientID %>').click(function () {
+                alert("Giriş Yap butonuna tıklandı!");
+            });
+        });--%>
+</script>
+</body>
+</html>
