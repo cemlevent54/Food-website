@@ -8,7 +8,7 @@
     <title></title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
-
+    <%--guncelleme oldu--%>
     <style>
         body {
             margin: 0 auto;
