@@ -102,7 +102,7 @@
                 <asp:HiddenField ID="HiddenField1" runat="server" />
                 <asp:Image ID="img_userphoto" runat="server" Height="150px" Width="150px"/>
                 <asp:FileUpload ID="FileUpload1" runat="server" />
-                <asp:Button ID="btn_resimguncelle" runat="server" Text="Resim Yükle" OnClick="btn_resimguncelle_Click" CssClass="styled-button" Width="100px"/>
+                <asp:Button ID="btn_resimguncelle" runat="server" Text="Resim Yükle" OnClick="btn_resimguncelle_Click1" CssClass="styled-button" Width="100px"/>
                 <%--<asp:TextBox ID="foto" runat="server"></asp:TextBox>--%>
                 <asp:Label ID="lblresim" runat="server" Text=""></asp:Label>
                 
@@ -111,7 +111,7 @@
         <tr>
             <td></td>
             <td style="display:flex;">
-                <asp:Button ID="btn_guncelle" runat="server" Text="Güncelle" CssClass="styled-button" OnClick="btn_guncelle_Click" />
+                <asp:Button ID="btn_guncelle" runat="server" Text="Güncelle" CssClass="styled-button" OnClick="btn_guncelle_Click1" />
                 <br />
                 <asp:Label ID="lblsonuc" runat="server" Text=""></asp:Label>
             </td>

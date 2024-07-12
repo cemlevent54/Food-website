@@ -273,7 +273,11 @@
                         </span>
                         <div class="menu-options" id="userMenu">
                             <ul>
-                                <li><a href="ProfilBilgileri.aspx">Kullanıcı Bilgilerini Değiştir</a></li>
+                                <li>
+                                    <asp:LinkButton ID="LinkButton2" runat="server" OnClick="LinkButton2_Click">Kullanıcı Bilgilerini Değiştir</asp:LinkButton>
+                                    <%--<a href="ProfilBilgileri.aspx">Kullanıcı Bilgilerini Değiştir</a>--%>
+
+                                </li>
                                 <li>
                                     <asp:LinkButton ID="LinkButton1" runat="server" Text="Çıkış Yap" OnClick="lnkbtn_logout_Click" Style="color: #007bff; text-decoration: none; font-size: 1em;"></asp:LinkButton>
                                 </li>
@@ -304,7 +308,7 @@
                     if (!userMenu.matches(':hover')) {
                         userMenu.style.display = 'none';
                     }
-                }, 20000);
+                }, 1000);
             });
 
             userMenu.addEventListener('mouseover', function () {
@@ -316,7 +320,7 @@
                     if (!userNameSpan.matches(':hover')) {
                         userMenu.style.display = 'none';
                     }
-                }, 20000);
+                }, 1000);
             });
         });
     </script>

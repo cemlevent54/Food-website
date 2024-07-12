@@ -163,5 +163,15 @@ namespace YemekSite.y
             Functions.resimYukleme(FileUpload1, lblresim, HiddenField1);
             img_userphoto.ImageUrl = HiddenField1.Value;
         }
+
+        protected void btn_resimguncelle_Click1(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btn_guncelle_Click1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -87,6 +87,7 @@
     <Content Include="images\refreshicon.png" />
     <Content Include="images\uye_olma_resim.png" />
     <Content Include="images\view.png" />
+    <Content Include="ProfilBilgileri.aspx" />
     <Content Include="y\AnasayfaYonetici.aspx" />
     <Content Include="y\GununYemegiSecme.aspx" />
     <Content Include="y\HakkimizdaDuzenle.aspx" />
@@ -161,6 +162,13 @@
     </Compile>
     <Compile Include="classes\Kullanici.cs" />
     <Compile Include="classes\LoginUser.cs" />
+    <Compile Include="ProfilBilgileri.aspx.cs">
+      <DependentUpon>ProfilBilgileri.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProfilBilgileri.aspx.designer.cs">
+      <DependentUpon>ProfilBilgileri.aspx</DependentUpon>
+    </Compile>
     <Compile Include="y\AnasayfaYonetici.aspx.cs">
       <DependentUpon>AnasayfaYonetici.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

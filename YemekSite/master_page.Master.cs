@@ -249,5 +249,12 @@ namespace YemekSite
                 sqlclass.baglantiKapat();
             }
         }
+
+        protected void LinkButton2_Click(object sender, EventArgs e)
+        {
+            // redirect to profile page
+            Thread.Sleep(700);
+            Response.Redirect("~/ProfilBilgileri.aspx"); // Use Response.Redirect for debugging
+        }
     }
 }
