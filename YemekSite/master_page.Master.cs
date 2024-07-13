@@ -315,5 +315,76 @@ namespace YemekSite
 
             return "";
         }
+
+
+        // onemli
+        private string getKategoriId(object sender)
+        {
+            Label label = (Label)sender;
+            return label.Text;
+        }
+
+        // buradan devam et
+        protected void DataList1_ItemDataBound(object sender, DataListItemEventArgs e)
+        {
+
+            try
+            {
+                sqlclass.baglantiAc();
+
+                var categoryImage = (Image)e.Item.FindControl("pctrSlider");
+                if (categoryImage != null)
+                {
+                    if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+                    {
+                        var kategoriId = DataBinder.Eval(e.Item.DataItem, "kategori_id").ToString();
+                        var kategoriAd = DataBinder.Eval(e.Item.DataItem, "kategori_ad").ToString();
+                        string sqlquery = "SELECT kategori_resim FROM tbl_kategoriler WHERE kategori_id = @kategori_id";
+                        SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
+                        komut.Parameters.AddWithValue("@kategori_id", kategoriId);
+                        SqlDataReader oku = komut.ExecuteReader();
+                        DataTable dt = new DataTable();
+                        dt.Load(oku);
+
+                        if (dt.Rows.Count > 0)
+                        {
+                            DataRow dr = dt.Rows[0];
+                            if (dr["kategori_resim"] != DBNull.Value && dr["kategori_resim"] is byte[])
+                            {
+                                byte[] resimBytes = (byte[])dr["kategori_resim"];
+                                string base64String = Convert.ToBase64String(resimBytes);
+                                string imageUrl = "data:image/jpg;base64," + base64String;
+
+                                // Görüntü URL'sini ayarla
+                                categoryImage.ImageUrl = imageUrl;
+                                //categoryImage.AlternateText = kategoriAd;
+                            }
+                            else
+                            {
+                                // Varsayılan resim ayarla
+                                categoryImage.ImageUrl = "C:\\Users\\Asus\\Desktop\\YemekSite\\YemekSite\\images\\giris_resim.jpg";
+                            }
+                        }
+                        else
+                        {
+                            // Varsayılan resim ayarla
+                            categoryImage.ImageUrl = "C:\\Users\\Asus\\Desktop\\YemekSite\\YemekSite\\images\\giris_resim.jpg";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
+            finally
+            {
+                sqlclass.baglantiKapat();
+            }
+
+
+
+
+        }
     }
 }

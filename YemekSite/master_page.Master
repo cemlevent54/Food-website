@@ -284,7 +284,7 @@
             <div class="left_panel">
                 <div class="categories">
                     <h3>KATEGORİLER</h3>
-                    <asp:DataList ID="DataList1" runat="server" CellPadding="4" ForeColor="#333333" CssClass="category_list" Width="100%" Font-Bold="true">
+                    <asp:DataList ID="DataList1" runat="server" CellPadding="4" ForeColor="#333333" CssClass="category_list" Width="100%" Font-Bold="true" OnItemDataBound="DataList1_ItemDataBound">
                         <AlternatingItemStyle BackColor="#ff6600"></AlternatingItemStyle>
                         <FooterStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White"></FooterStyle>
                         <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White"></HeaderStyle>
@@ -326,6 +326,7 @@
                 </asp:ContentPlaceHolder>
             </div>
         </div>
+        <asp:HiddenField ID="HiddenField1" runat="server" />
     </form>
 
     <script type="text/javascript">
