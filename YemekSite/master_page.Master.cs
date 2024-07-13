@@ -254,7 +254,66 @@ namespace YemekSite
         {
             // redirect to profile page
             Thread.Sleep(700);
-            Response.Redirect("~/ProfilBilgileri.aspx"); // Use Response.Redirect for debugging
+            //Response.Redirect("~/ProfilBilgileri.aspx"); // Use Response.Redirect for debugging
+            string userid = getUserId();
+            Response.Redirect("~/ProfilBilgileri.aspx?kullanici_id="+userid); // Use Response.Redirect for debugging
+
+            //Response.Redirect("~/y/YoneticiYemeklerDetay.aspx?yemek_id=" + getYemekId(sender));
+        }
+
+        private Dictionary<string, string> findUserIdFromSession()
+        {
+            Dictionary<string, string> userinfos = new Dictionary<string, string>();
+
+            HttpCookie userCredentialsCookie = Request.Cookies["userCredentials"];
+            if (userCredentialsCookie != null)
+            {
+                string cookieValue = userCredentialsCookie.Value;
+                // Assuming the cookie value format is "username=...&password=..."
+                var credentials = HttpUtility.ParseQueryString(cookieValue);
+                string username = credentials["username"];
+                string password = credentials["password"];
+                userinfos.Add(username, password);
+                return userinfos;
+            }
+            return null;
+        }
+
+        private string getUserId()
+        {
+            try
+            {
+                sqlclass.baglantiAc();
+                Dictionary<string, string> userinfos = findUserIdFromSession();
+                if (userinfos == null)
+                {
+                    return null;
+                }
+                string username = userinfos.Keys.ToList()[0];
+                string password = userinfos.Values.ToList()[0];
+
+                string sqlquery = "SELECT kullanici_id FROM tbl_kullanicilar WHERE kullanici_username=@Param2 AND kullanici_sifre=@Param3";
+                SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
+                komut.Parameters.AddWithValue("@Param2", username);
+                komut.Parameters.AddWithValue("@Param3", password);
+                SqlDataReader oku = komut.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(oku);
+                oku.Close();
+                DataRow dr = dt.Rows[0];
+                return dr["kullanici_id"].ToString();
+
+            }
+            catch(Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
+            finally
+            {
+                sqlclass.baglantiKapat();
+            }
+
+            return "";
         }
     }
 }

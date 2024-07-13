@@ -194,6 +194,23 @@
             .user_button {
                 font-size: 16px;
             }
+
+            .user-info {
+                margin-top: 20px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .user-info img {
+                margin-bottom: 10px;
+            }
+
+            .user-info .user-name {
+                margin-left: 0;
+            }
         }
 
         /*menu css*/
@@ -224,6 +241,23 @@
         .menu-options a:hover {
             background-color: #f1f1f1;
         }
+
+        .menu-link {
+          color: #000000 !important; /* Yazı rengini siyah yapar */
+          text-decoration: none; /* Alt çizgiyi kaldırır */
+          font-size: 1em; /* Yazı boyutunu ayarlar */
+          border: none; /* Kenarlık kaldırılır */
+          background: none; /* Arka plan kaldırılır */
+          cursor: pointer; /* Fare işaretçisini el yapar */
+          padding: 0; /* Varsayılan dolgu kaldırılır */
+          font-family: inherit; /* Yazı tipini mevcut yazı tipine eşitler */
+          padding-left: 0 !important; /* Sol dolgu boşluğunu kaldırır */
+          margin-left: 0 !important; /* Sol kenar boşluğunu kaldırır */
+          padding: 0; /* Varsayılan dolgu kaldırılır */
+        }
+
+
+
         /*menu css*/
     </style>
 </head>
@@ -272,14 +306,14 @@
                             <asp:Label ID="lbl_user_name" runat="server" Text="" Style="font-size: 1.2em; margin-right: 10px; font-weight: bold;" />
                         </span>
                         <div class="menu-options" id="userMenu">
-                            <ul>
+                            <ul style="list-style-type: none;">
                                 <li>
-                                    <asp:LinkButton ID="LinkButton2" runat="server" OnClick="LinkButton2_Click">Kullanıcı Bilgilerini Değiştir</asp:LinkButton>
+                                    <asp:LinkButton ID="LinkButton2" runat="server" OnClick="LinkButton2_Click" CssClass="menu-link">Kullanıcı Bilgilerini Değiştir</asp:LinkButton>
                                     <%--<a href="ProfilBilgileri.aspx">Kullanıcı Bilgilerini Değiştir</a>--%>
 
                                 </li>
-                                <li>
-                                    <asp:LinkButton ID="LinkButton1" runat="server" Text="Çıkış Yap" OnClick="lnkbtn_logout_Click" Style="color: #007bff; text-decoration: none; font-size: 1em;"></asp:LinkButton>
+                                <li style=" color: inherit;">
+                                    <asp:LinkButton ID="LinkButton1" runat="server" Text="Çıkış Yap" OnClick="lnkbtn_logout_Click" ForeColor="#333333" Style="color: #007bff; text-decoration: none; font-size: 1em;" CssClass="menu-link"></asp:LinkButton>
                                 </li>
                             </ul>
                         </div>
@@ -299,28 +333,16 @@
             const userNameSpan = document.getElementById('userNameSpan');
             const userMenu = document.getElementById('userMenu');
 
-            userNameSpan.addEventListener('mouseover', function () {
-                userMenu.style.display = 'block';
-            });
+            function toggleUserMenu() {
+                userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
+            }
 
-            userNameSpan.addEventListener('mouseout', function () {
-                setTimeout(function () {
-                    if (!userMenu.matches(':hover')) {
-                        userMenu.style.display = 'none';
-                    }
-                }, 1000);
-            });
+            userNameSpan.addEventListener('click', toggleUserMenu);
 
-            userMenu.addEventListener('mouseover', function () {
-                userMenu.style.display = 'block';
-            });
-
-            userMenu.addEventListener('mouseout', function () {
-                setTimeout(function () {
-                    if (!userNameSpan.matches(':hover')) {
-                        userMenu.style.display = 'none';
-                    }
-                }, 1000);
+            document.addEventListener('click', function (event) {
+                if (!userNameSpan.contains(event.target) && !userMenu.contains(event.target)) {
+                    userMenu.style.display = 'none';
+                }
             });
         });
     </script>

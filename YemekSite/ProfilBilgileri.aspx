@@ -102,5 +102,12 @@
             </td>
         </tr>
 
+        <tr>
+            <td></td>
+            <td>
+                <asp:Button ID="btn_kullaniciSil" runat="server" Text="Hesabımı Sil" OnClick="btn_kullaniciSil_Click" CssClass="styled-button" />
+            </td>
+        </tr>
+
     </table>
     </asp:Content>
