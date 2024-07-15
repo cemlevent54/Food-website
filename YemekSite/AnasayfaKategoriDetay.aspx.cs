@@ -16,6 +16,7 @@ namespace YemekSite.AnasayfaPages
             if (!IsPostBack)
             {
                 YemekVerileriniGetir();
+                KategoriResminiGetir();
             }
         }
         DataTable dt = new DataTable();
@@ -64,6 +65,55 @@ namespace YemekSite.AnasayfaPages
         private void KategoriResminiGetir()
         {
             // burayi yonetici panelinden kategori resmi ekleyince yapacagiz
+
+            try
+            {
+                // master pagedeki slider ın resmini kategori id deki resme göre değiştirme
+                string kategori_id = getKategoriId();
+                sqlclass.baglantiAc();
+                string sqlquery = "SELECT * FROM tbl_kategoriler WHERE kategori_id=@Param1";
+                SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
+                komut.Parameters.AddWithValue("@Param1", kategori_id);
+                SqlDataReader oku = komut.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(oku);
+                oku.Close();
+                dt.Columns.Add("kategori_resim_base64", typeof(string));
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["kategori_resim"] != DBNull.Value && row["kategori_resim"] is byte[])
+                    {
+                        byte[] resimBytes = (byte[])row["kategori_resim"];
+                        string base64String = Convert.ToBase64String(resimBytes);
+                        row["kategori_resim_base64"] = "data:image/jpg;base64," + base64String;
+                    }
+                }
+
+                DataRow dr = dt.Rows[0];
+                // kategori resmini div slider a getir
+                // Master Page'deki img etiketini güncelle
+                if (dt.Rows.Count > 0 && !string.IsNullOrEmpty(dt.Rows[0]["kategori_resim_base64"].ToString()))
+                {
+                    string base64Resim = dr["kategori_resim_base64"].ToString();
+                    Image pctrSlider = (Image)Master.FindControl("pctrSlider");
+                    if (pctrSlider != null)
+                    {
+                        pctrSlider.ImageUrl = base64Resim;
+                    }
+                }
+
+
+
+            }
+            catch(Exception ex)
+            {
+                Response.Write("hata: "+ ex.Message);
+
+            }finally
+            {
+                sqlclass.baglantiKapat();
+            }
         }
     }
 }
