@@ -48,7 +48,7 @@ namespace YemekSite
             {
                 sqlclass.baglantiAc();
 
-                string sqlquery = "SELECT kategori_id FROM tbl_yemekler WHERE yemek_onay= 1";
+                string sqlquery = "SELECT kategori_id FROM tbl_yemekler WHERE yemek_onay = 1";
                 SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
                 SqlDataReader oku = komut.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -60,7 +60,7 @@ namespace YemekSite
                     sqlquery = "SELECT COUNT(*) FROM tbl_yemekler WHERE kategori_id = @kategori_id AND yemek_onay = 1";
                     komut = new SqlCommand(sqlquery, sqlclass.baglanti);
                     komut.Parameters.AddWithValue("@kategori_id", int.Parse(dr["kategori_id"].ToString()));
-                    int kategori_adet = Convert.ToInt32(komut.ExecuteScalar());
+                    int kategori_adet = (int)komut.ExecuteScalar();
 
                     sqlquery = "UPDATE tbl_kategoriler SET kategori_adet = @kategori_adet WHERE kategori_id = @kategori_id";
                     komut = new SqlCommand(sqlquery, sqlclass.baglanti);

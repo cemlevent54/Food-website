@@ -19,7 +19,6 @@ namespace YemekSite.Menuler
                 yemek_id = getYemekId();
                 if (!string.IsNullOrEmpty(yemek_id))
                 {
-
                     if (getYemekOnayStates(yemek_id) == true)
                     {
                         btn_guncelle.Visible = true;
@@ -33,7 +32,6 @@ namespace YemekSite.Menuler
                         btn_ekle.Visible = false;
                     }
                     YemekVerileriniGetir(yemek_id);
-                    
                 }
             }
         }
@@ -41,6 +39,7 @@ namespace YemekSite.Menuler
         SqlClass sqlclass = new SqlClass();
         string yemek_id = "";
         bool yemek_onay = false;
+
         private string getYemekId()
         {
             string yemek_id = Request.QueryString["yemek_id"];
@@ -69,12 +68,11 @@ namespace YemekSite.Menuler
             {
                 lbl_mesaj.Text = "Yemek Bulunamadı";
             }
-            sqlclass.baglantiKapat();
             oku.Close();
+            sqlclass.baglantiKapat();
             return yemek_onay;
-
         }
-        
+
         private void YemekVerileriniGetir(string tarifid)
         {
             try
@@ -88,47 +86,53 @@ namespace YemekSite.Menuler
                 dt.Load(oku);
                 dt.Columns.Add("yemek_resim_base64", typeof(string));
 
-                foreach(DataRow dtrow in dt.Rows)
+                if (dt.Rows.Count > 0)
                 {
-                    txtbox_yemekadi.Text = dtrow["yemek_ad"].ToString();
-                    txtbox_yemekmalzemeleri.Text = dtrow["yemek_malzeme"].ToString();
-                    txtbox_yemektarifi.Text = dtrow["yemek_tarif"].ToString();
-
-                    string yemektarihstr = dtrow["yemek_tarih"].ToString().Trim();
-                    DateTime yemektarihdt;
-                    string formattedDate = "";
-                    if (DateTime.TryParse(yemektarihstr, out yemektarihdt))
+                    foreach (DataRow dtrow in dt.Rows)
                     {
-                        // Parsing was successful, convert DateTime to string in desired format
-                        formattedDate = yemektarihdt.ToString("yyyy-MM-dd HH:mm:ss");
+                        txtbox_yemekadi.Text = dtrow["yemek_ad"].ToString();
+                        txtbox_yemekmalzemeleri.Text = dtrow["yemek_malzeme"].ToString();
+                        txtbox_yemektarifi.Text = dtrow["yemek_tarif"].ToString();
+
+                        string yemektarihstr = dtrow["yemek_tarih"].ToString().Trim();
+                        DateTime yemektarihdt;
+                        string formattedDate = "";
+                        if (DateTime.TryParse(yemektarihstr, out yemektarihdt))
+                        {
+                            formattedDate = yemektarihdt.ToString("yyyy-MM-dd HH:mm:ss");
+                        }
+                        else
+                        {
+                            lbl_mesaj.Text = "Geçersiz tarih formatı. Lütfen geçerli bir tarih girin.";
+                        }
+                        txtbox_yemektarihi.Text = formattedDate;
+                        txtbox_yemekpuan.Text = dtrow["yemek_puan"].ToString();
+
+                        txtbox_kategoriId.Text = dtrow["kategori_id"].ToString();
+                        HiddenField1.Value = dtrow["kategori_id"].ToString();
+                        dropdown_kategoriId.SelectedValue = HiddenField1.Value;
+
+                        if (dtrow["yemek_resim"] != DBNull.Value && dtrow["yemek_resim"] is byte[])
+                        {
+                            byte[] resimBytes = (byte[])dtrow["yemek_resim"];
+                            string base64String = Convert.ToBase64String(resimBytes);
+                            dtrow["yemek_resim_base64"] = "data:image/jpg;base64," + base64String;
+                        }
                     }
-                    else
+
+                    if (dt.Rows.Count > 0)
                     {
-                        // Handle the error, inform the user, etc.
-                        lbl_mesaj.Text = "Geçersiz tarih formatı. Lütfen geçerli bir tarih girin.";
+                        DataRow dr = dt.Rows[0];
+                        img_yemekresim_yukleme.ImageUrl = dr["yemek_resim_base64"].ToString();
+                        HiddenField2.Value = dr["yemek_resim_base64"].ToString();
                     }
-                    txtbox_yemektarihi.Text = formattedDate.ToString();
-                    txtbox_yemekpuan.Text = dtrow["yemek_puan"].ToString();
-
-                    txtbox_kategoriId.Text = dtrow["kategori_id"].ToString();
-                    HiddenField1.Value = dtrow["kategori_id"].ToString();
-                    dropdown_kategoriId.SelectedValue = HiddenField1.Value;
-
-                    if (dtrow["yemek_resim"] != DBNull.Value && dtrow["yemek_resim"] is byte[])
-                    {
-                        byte[] resimBytes = (byte[])dtrow["yemek_resim"];
-                        string base64String = Convert.ToBase64String(resimBytes);
-                        dtrow["yemek_resim_base64"] = "data:image/jpg;base64," + base64String;
-                    }
-                    
-
                 }
-
-                DataRow dr = dt.Rows[0];
-                img_yemekresim_yukleme.ImageUrl = dr["yemek_resim_base64"].ToString();
-
-
-            }catch(Exception ex)
+                else
+                {
+                    lbl_mesaj.Text = "Yemek bulunamadı.";
+                }
+            }
+            catch (Exception ex)
             {
                 lbl_mesaj.Text = ex.Message;
             }
@@ -143,14 +147,14 @@ namespace YemekSite.Menuler
             try
             {
                 sqlclass.baglantiAc();
-                string sqlquery = "SELECT kategori_id,kategori_ad FROM tbl_kategoriler";
+                string sqlquery = "SELECT kategori_id, kategori_ad FROM tbl_kategoriler";
                 SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
                 SqlDataReader oku = komut.ExecuteReader();
                 DataTable dt = new DataTable();
                 dt.Load(oku);
-                
+
                 Dictionary<int, string> kategoriler = new Dictionary<int, string>();
-                foreach(DataRow dtrow in dt.Rows)
+                foreach (DataRow dtrow in dt.Rows)
                 {
                     kategoriler.Add(int.Parse(dtrow["kategori_id"].ToString()), dtrow["kategori_ad"].ToString());
                 }
@@ -160,10 +164,8 @@ namespace YemekSite.Menuler
                 dropdown_kategoriId.DataTextField = "Value"; // This will display the category names
                 dropdown_kategoriId.DataValueField = "Key";  // This will keep the category IDs as values
                 dropdown_kategoriId.DataBind();
-                
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 lbl_mesaj.Text = ex.Message;
             }
@@ -172,35 +174,37 @@ namespace YemekSite.Menuler
                 sqlclass.baglantiKapat();
             }
         }
-        
+
         protected void btn_guncelle_Click(object sender, EventArgs e)
         {
-            Dictionary<Control,string> controlsToValidate = new Dictionary<Control, string>() {
-                {txtbox_yemekadi,"Yemek Adı Boş Geçilemez"},
-                {txtbox_yemekmalzemeleri,"Yemek Malzemeleri Boş Geçilemez"},
-                {txtbox_yemektarifi,"Yemek Tarifi Boş Geçilemez"},
-                {txtbox_yemektarihi,"Yemek Tarihi Boş Geçilemez"},
-                {txtbox_yemekpuan,"Yemek Puanı Boş Geçilemez"},
-                {txtbox_kategoriId,"Kategori Id Boş Geçilemez"}
+            Dictionary<Control, string> controlsToValidate = new Dictionary<Control, string>() {
+                {txtbox_yemekadi, "Yemek Adı Boş Geçilemez"},
+                {txtbox_yemekmalzemeleri, "Yemek Malzemeleri Boş Geçilemez"},
+                {txtbox_yemektarifi, "Yemek Tarifi Boş Geçilemez"},
+                {txtbox_yemektarihi, "Yemek Tarihi Boş Geçilemez"},
+                {txtbox_yemekpuan, "Yemek Puanı Boş Geçilemez"},
+                {txtbox_kategoriId, "Kategori Id Boş Geçilemez"}
             };
+            
             try
             {
-                string yemekadi = txtbox_yemekadi.Text;
-                string yemekmalzemeleri = txtbox_yemekmalzemeleri.Text;
-                string yemektarifi = txtbox_yemektarifi.Text;
-                string yemektarihi = txtbox_yemektarihi.Text;
-                float yemekpuan = float.Parse(txtbox_yemekpuan.Text);
-                string kategoriId = txtbox_kategoriId.Text;
+                string yemekadi = txtbox_yemekadi.Text.Trim();
+                string yemekmalzemeleri = txtbox_yemekmalzemeleri.Text.Trim();
+                string yemektarifi = txtbox_yemektarifi.Text.Trim();
+                string yemektarihi = txtbox_yemektarihi.Text.Trim();
+                float yemekpuan = float.Parse(txtbox_yemekpuan.Text.Trim());
+                string kategoriId = txtbox_kategoriId.Text.Trim();
                 string katid = dropdown_kategoriId.SelectedValue;
                 string resim = HiddenField2.Value;
+                
 
-                if(Functions.ValidateForm(controlsToValidate) == "")
+                if (Functions.ValidateForm(controlsToValidate) == "")
                 {
                     string yemek_id = getYemekId();
                     sqlclass.baglantiAc();
                     string sqlquery = "UPDATE tbl_yemekler " +
-                        "SET yemek_ad=@Param1, yemek_malzeme=@Param2, yemek_tarif=@Param3, yemek_tarih=@Param4," +
-                        "yemek_puan=@Param5,kategori_id=@Param6, yemek_resim=@Param8 WHERE yemek_id=@Param7";
+                        "SET yemek_ad=@Param1, yemek_malzeme=@Param2, yemek_tarif=@Param3, yemek_tarih=@Param4, " +
+                        "yemek_puan=@Param5, kategori_id=@Param6, yemek_resim=@Param8 WHERE yemek_id=@Param7";
                     SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
                     komut.Parameters.AddWithValue("@Param1", yemekadi);
                     komut.Parameters.AddWithValue("@Param2", yemekmalzemeleri);
@@ -208,22 +212,22 @@ namespace YemekSite.Menuler
                     DateTime.TryParse(yemektarihi, out DateTime yemektarihidt);
                     komut.Parameters.AddWithValue("@Param4", yemektarihidt);
                     komut.Parameters.AddWithValue("@Param5", yemekpuan);
-                    komut.Parameters.AddWithValue("@Param6", kategoriId);
-                    komut.Parameters.AddWithValue("@Param7", yemek_id);
+                    komut.Parameters.AddWithValue("@Param6", katid);
+                    komut.Parameters.AddWithValue("@Param7", Convert.ToInt32(yemek_id));
+
                     //// Convert base64 image string to byte array
                     byte[] k_resim = Convert.FromBase64String(resim.Split(',')[1]);
                     komut.Parameters.Add("@Param8", SqlDbType.Image).Value = k_resim;
 
                     komut.ExecuteNonQuery();
                     lbl_mesaj.Text = "Yemek Güncellendi";
-                    
                 }
                 else
                 {
                     lbl_mesaj.Text = Functions.ValidateForm(controlsToValidate);
                 }
-
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 lbl_mesaj.Text = ex.Message;
             }
@@ -236,12 +240,12 @@ namespace YemekSite.Menuler
         protected void btn_onayla_Click(object sender, EventArgs e)
         {
             Dictionary<Control, string> controlsToValidate = new Dictionary<Control, string>() {
-                {txtbox_yemekadi,"Yemek Adı Boş Geçilemez"},
-                {txtbox_yemekmalzemeleri,"Yemek Malzemeleri Boş Geçilemez"},
-                {txtbox_yemektarifi,"Yemek Tarifi Boş Geçilemez"},
-                {txtbox_yemektarihi,"Yemek Tarihi Boş Geçilemez"},
-                {txtbox_yemekpuan,"Yemek Puanı Boş Geçilemez"},
-                {txtbox_kategoriId,"Kategori Id Boş Geçilemez"}
+                {txtbox_yemekadi, "Yemek Adı Boş Geçilemez"},
+                {txtbox_yemekmalzemeleri, "Yemek Malzemeleri Boş Geçilemez"},
+                {txtbox_yemektarifi, "Yemek Tarifi Boş Geçilemez"},
+                {txtbox_yemektarihi, "Yemek Tarihi Boş Geçilemez"},
+                {txtbox_yemekpuan, "Yemek Puanı Boş Geçilemez"},
+                {txtbox_kategoriId, "Kategori Id Boş Geçilemez"}
             };
             try
             {
@@ -256,25 +260,22 @@ namespace YemekSite.Menuler
                 {
                     string yemek_id = getYemekId();
                     sqlclass.baglantiAc();
-                    string sqlquery = "UPDATE tbl_yemekler SET yemek_onay= 1 WHERE yemek_id=@Param2";
+                    string sqlquery = "UPDATE tbl_yemekler SET yemek_onay=1 WHERE yemek_id=@Param2";
                     SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
                     komut.Parameters.AddWithValue("@Param2", yemek_id);
                     komut.ExecuteNonQuery();
-                    lbl_mesaj.Text = "Yemek Onaylandi.";
+                    lbl_mesaj.Text = "Yemek Onaylandı.";
 
-                    // kategoride bulunan miktari artırma
+                    // kategoride bulunan miktarı artırma
                     string sqlquery2 = "UPDATE tbl_kategoriler SET kategori_adet = kategori_adet + 1 WHERE kategori_id=@Param1";
                     SqlCommand komut2 = new SqlCommand(sqlquery2, sqlclass.baglanti);
-                    komut2.Parameters.AddWithValue("@Param1", kategoriId);
+                    komut2.Parameters.AddWithValue("@Param1", int.Parse(kategoriId));
                     komut2.ExecuteNonQuery();
-
-
                 }
                 else
                 {
                     lbl_mesaj.Text = Functions.ValidateForm(controlsToValidate);
                 }
-
             }
             catch (Exception ex)
             {
@@ -288,14 +289,13 @@ namespace YemekSite.Menuler
 
         protected void btn_ekle_Click(object sender, EventArgs e)
         {
-
+            // Implement addition logic here if needed
         }
 
         protected void dropdown_kategoriId_SelectedIndexChanged(object sender, EventArgs e)
         {
             HiddenField1.Value = dropdown_kategoriId.SelectedValue;
             txtbox_kategoriId.Text = dropdown_kategoriId.SelectedValue;
-
         }
 
         protected void btn_resimekle_Click(object sender, EventArgs e)
