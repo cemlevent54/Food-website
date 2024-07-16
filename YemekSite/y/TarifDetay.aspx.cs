@@ -317,9 +317,9 @@ namespace YemekSite.Menuler
                     komutekle.Parameters.AddWithValue("@Param_ad", tarif_adi);
                     komutekle.Parameters.AddWithValue("@Param_malzeme", tarif_malzemeleri);
                     komutekle.Parameters.AddWithValue("@Param_tarif", tarif_yapilisi);
-                    komutekle.Parameters.AddWithValue("@Param_puan", 0);
+                    komutekle.Parameters.AddWithValue("@Param_puan", 0); // set by admin
                     komutekle.Parameters.AddWithValue("@Param_resim", resimBytes);
-                    komutekle.Parameters.AddWithValue("@Param_kategoriId", 13); // temp kategori id
+                    komutekle.Parameters.AddWithValue("@Param_kategoriId", 1); // temp kategori id
                     komutekle.Parameters.AddWithValue("@Param_onay", 0);
                     komutekle.Parameters.AddWithValue("@Param_tarih", DateTime.Now);
                     komutekle.ExecuteNonQuery();

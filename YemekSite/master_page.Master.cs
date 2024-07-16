@@ -23,7 +23,6 @@ namespace YemekSite
             if (!IsPostBack)
             {
                 kategoriYukleme();
-                updateKategoriNumbers();
                 HttpCookie userCredentialsCookie = Request.Cookies["userCredentials"];
                 if (userCredentialsCookie != null && !string.IsNullOrEmpty(userCredentialsCookie.Value))
                 {
@@ -39,11 +38,11 @@ namespace YemekSite
             }
         }
 
-        
+
         private void updateKategoriNumbers()
         {
-            //tbl_yemeklerden onaylı yemekleri seçip kategori_id lerini al
-            //tbl_kategorilerdeki kategori_id lere göre yemek sayısını güncelle
+            // tbl_yemeklerden onaylı yemekleri seçip kategori_id lerini al
+            // tbl_kategorilerdeki kategori_id lere göre yemek sayısını güncelle
             try
             {
                 sqlclass.baglantiAc();
@@ -55,31 +54,38 @@ namespace YemekSite
                 dt.Load(oku);
                 oku.Close();
 
+                //Response.Write("Onaylı yemeklerin kategorileri:<br>");
                 foreach (DataRow dr in dt.Rows)
                 {
+                    //Response.Write("Kategori ID: " + dr["kategori_id"] + "<br>");
+
                     sqlquery = "SELECT COUNT(*) FROM tbl_yemekler WHERE kategori_id = @kategori_id AND yemek_onay = 1";
                     komut = new SqlCommand(sqlquery, sqlclass.baglanti);
+                    komut.Parameters.Clear();
                     komut.Parameters.AddWithValue("@kategori_id", int.Parse(dr["kategori_id"].ToString()));
                     int kategori_adet = (int)komut.ExecuteScalar();
 
+                    Response.Write("Kategori ID: " + dr["kategori_id"] + " - Onaylı Yemek Sayısı: " + kategori_adet + "<br>");
+
                     sqlquery = "UPDATE tbl_kategoriler SET kategori_adet = @kategori_adet WHERE kategori_id = @kategori_id";
                     komut = new SqlCommand(sqlquery, sqlclass.baglanti);
+                    komut.Parameters.Clear();
                     komut.Parameters.AddWithValue("@kategori_adet", kategori_adet);
                     komut.Parameters.AddWithValue("@kategori_id", int.Parse(dr["kategori_id"].ToString()));
                     komut.ExecuteNonQuery();
                 }
 
-
-
-
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                Response.Write(ex.Message);
-            }finally
+                Response.Write("Hata: " + ex.Message + "<br>" + ex.StackTrace);
+            }
+            finally
             {
                 sqlclass.baglantiKapat();
             }
         }
+
         private void kategoriYukleme()
         {
             sqlclass.baglantiAc();
@@ -90,9 +96,51 @@ namespace YemekSite
             DataTable dt = new DataTable();
             dt.Load(oku);
 
+
+            ///////
+            kategoriSayisiGuncelleme(dt);
+
+            //////
+
             DataList1.DataSource = dt;
             DataList1.DataBind();
             sqlclass.baglantiKapat();
+        }
+
+        private void kategoriSayisiGuncelleme(DataTable dt) 
+        {
+            try
+            {
+                sqlclass.baglantiAc();
+                string sqlquery = "SELECT kategori_id, COUNT(*) AS yemek_sayisi FROM tbl_yemekler WHERE yemek_onay = 1 GROUP BY kategori_id";
+                SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
+                SqlDataReader oku = komut.ExecuteReader();
+                DataTable dt2 = new DataTable();
+                dt2.Load(oku);
+
+                // Update the original DataTable (dt) with counts from dt2
+                foreach (DataRow row in dt.Rows)
+                {
+                    int kategoriId = Convert.ToInt32(row["kategori_id"]);
+                    DataRow[] result = dt2.Select("kategori_id = " + kategoriId);
+                    if (result.Length > 0)
+                    {
+                        row["kategori_adet"] = Convert.ToInt32(result[0]["yemek_sayisi"]);
+                    }
+                    else
+                    {
+                        row["kategori_adet"] = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
+            finally
+            {
+                sqlclass.baglantiKapat();
+            }
         }
 
         protected void btnAnaSayfa_Click(object sender, EventArgs e)
@@ -130,8 +178,6 @@ namespace YemekSite
             Thread.Sleep(700);
             Response.Redirect("uye-ol.aspx");
         }
-
-
 
         protected void lnkbtn_login_Click(object sender, EventArgs e)
         {
