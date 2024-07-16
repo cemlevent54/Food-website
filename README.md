@@ -19,8 +19,10 @@ This project is a web application for managing and displaying food recipes. It i
 ![anasayfa](https://github.com/user-attachments/assets/ae0a081a-80e3-43b1-897a-7df2bb34c0ed)
 
 When you run the application, the home page appears. There are `"Log In"` and `"Sign Up"` buttons at the top right corner. Other sections on the home page include:
+
 ![girisyap](https://github.com/user-attachments/assets/a92c0273-0d18-4850-affe-c27817e41185)
 ![uyeol](https://github.com/user-attachments/assets/079ff884-ae4a-48b4-bb98-509a7e9ce2f5)
+
 **Dish of the Day:** Recipes selected and recommended by the admin.
 
 **Suggest a Recipe:** A section where users can suggest new recipes.
@@ -33,6 +35,7 @@ When you run the application, the home page appears. There are `"Log In"` and `"
 
 **Recipe Details:**
 When you click on a recipe, detailed information about the recipe and a comment section will appear. The dish of the day and approved recipes are selected from the admin page.
+
 ![yemekdetaysayfası](https://github.com/user-attachments/assets/391f2b90-cd03-4baa-afde-ca6b316c2b2f)
 
 **User Login:**
