@@ -39,52 +39,7 @@ namespace YemekSite
         }
 
 
-        private void updateKategoriNumbers()
-        {
-            // tbl_yemeklerden onaylı yemekleri seçip kategori_id lerini al
-            // tbl_kategorilerdeki kategori_id lere göre yemek sayısını güncelle
-            try
-            {
-                sqlclass.baglantiAc();
-
-                string sqlquery = "SELECT kategori_id FROM tbl_yemekler WHERE yemek_onay = 1";
-                SqlCommand komut = new SqlCommand(sqlquery, sqlclass.baglanti);
-                SqlDataReader oku = komut.ExecuteReader();
-                DataTable dt = new DataTable();
-                dt.Load(oku);
-                oku.Close();
-
-                //Response.Write("Onaylı yemeklerin kategorileri:<br>");
-                foreach (DataRow dr in dt.Rows)
-                {
-                    //Response.Write("Kategori ID: " + dr["kategori_id"] + "<br>");
-
-                    sqlquery = "SELECT COUNT(*) FROM tbl_yemekler WHERE kategori_id = @kategori_id AND yemek_onay = 1";
-                    komut = new SqlCommand(sqlquery, sqlclass.baglanti);
-                    komut.Parameters.Clear();
-                    komut.Parameters.AddWithValue("@kategori_id", int.Parse(dr["kategori_id"].ToString()));
-                    int kategori_adet = (int)komut.ExecuteScalar();
-
-                    Response.Write("Kategori ID: " + dr["kategori_id"] + " - Onaylı Yemek Sayısı: " + kategori_adet + "<br>");
-
-                    sqlquery = "UPDATE tbl_kategoriler SET kategori_adet = @kategori_adet WHERE kategori_id = @kategori_id";
-                    komut = new SqlCommand(sqlquery, sqlclass.baglanti);
-                    komut.Parameters.Clear();
-                    komut.Parameters.AddWithValue("@kategori_adet", kategori_adet);
-                    komut.Parameters.AddWithValue("@kategori_id", int.Parse(dr["kategori_id"].ToString()));
-                    komut.ExecuteNonQuery();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Hata: " + ex.Message + "<br>" + ex.StackTrace);
-            }
-            finally
-            {
-                sqlclass.baglantiKapat();
-            }
-        }
+        
 
         private void kategoriYukleme()
         {
